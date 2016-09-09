@@ -1,0 +1,159 @@
+
+<!-- 
+    矩形 <rect>
+    圆形 <circle>
+    椭圆 <ellipse>
+    线段 <line>
+    折线 <polyline>
+    多边形 <polygon>
+    路径 <path>
+ -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>d3</title>
+    <link rel="stylesheet" href="./mystyle.css">
+    <script src="./d3.min.js"></script>
+</head>
+<body>
+    <script type="text/javascript">
+       // 饼状图
+       // var width = 400;
+       //  var height = 400;
+       //  var dataset = [ 30 , 10 , 43 , 55 , 13 ];
+        
+       //  var svg = d3.select("body")
+       //              .append("svg")
+       //              .attr("width", width)
+       //              .attr("height", height);
+        
+       //  var pie = d3.layout.pie();
+
+       //  var piedata = pie(dataset);      //将数据转化为饼状图所需的数据格式，布局不是要直接绘图，而是为了得到绘图所需的数据
+        
+       //  var outerRadius = 150;  //外半径
+       //  var innerRadius = 0;    //内半径，为0则中间没有空白
+       //  // SVG 有一个元素，叫做路径 <path>，是SVG中功能最强的元素，它可以表示其它任意的图形。顾名思义，路径元素就是通过定义一个段“路径”，来绘制出各种图形。但是，路径是很难计算的，通过布局转换后的数据 piedata仍然很难手动计算得到路径值。为我们完成这项任务的，就是生成器。
+       //  var arc = d3.svg.arc()  //弧生成器
+       //              .innerRadius(innerRadius)   //设置内半径
+       //              .outerRadius(outerRadius);  //设置外半径
+        
+       //  var color = d3.scale.category10();     //color 是一个颜色比例尺，它能根据传入的索引号获取相应的颜色值
+        
+       //  var arcs = svg.selectAll("g")
+       //                .data(piedata)
+       //                .enter()
+       //                .append("g")
+       //                .attr("transform","translate("+ (width/2) +","+ (width/2) +")");
+       //    // 因为 arcs 是同时选择了 5 个 <g> 元素的选择集，所以调用 append(“path”) 后，每个 <g> 中都有 <path> 。路径值的属性名称是 d，调用弧生成器后返回的值赋值给它。要注意，arc(d) 的参数 d 是被绑定的数据。            
+       //  arcs.append("path")
+       //      .attr("fill",function(d,i){
+       //          return color(i);
+       //      })
+       //      .attr("d",function(d){
+       //          return arc(d);
+       //      });
+       //  // 在每一个弧线中心添加文本
+       //  // arc.centroid(d) 能算出弧线的中心。要注意，text() 里返回的是 d.data ，而不是 d 。因为被绑定的数据是对象，里面有 d.startAngle、d.endAngle、d.data 等，其中 d.data 才是转换前的整数的值。
+       //  // arcs.append("text")  
+       //      .attr("transform",function(d){
+       //          return "translate(" + arc.centroid(d) + ")";
+       //      })
+       //      .attr("text-anchor","middle")
+       //      .text(function(d){
+       //          return d.data;
+       //      });
+        
+       //  console.log(dataset);
+       //  console.log(piedata);
+
+       // 力向图
+       var nodes = [ { name: "桂林"    }, { name: "广州" },
+                      { name: "厦门"    }, { name: "杭州"   },
+                      { name: "上海"   }, { name: "青岛"    },
+                      { name: "天津"    } ];
+                     
+        var edges = [  { source : 0  , target: 1 } , { source : 0  , target: 2 } ,
+                       { source : 0  , target: 3 } , { source : 1  , target: 4 } ,
+                       { source : 1  , target: 5 } , { source : 1  , target: 6 }  ];  
+        //  数字代表节点两侧，0表示上面数组第一元素，以此类推 
+        
+        var width = 800;
+        var height = 800;
+        
+        
+        var svg = d3.select("body")
+                    .append("svg")
+                    .attr("width",width)
+                    .attr("height",height);
+        
+        var force = d3.layout.force()
+                .nodes(nodes)       //指定节点数组
+                .links(edges)       //指定连线数组
+                .size([width,height])   //指定范围
+                .linkDistance(150)  //指定连线长度
+                .charge([-400]);    //相互之间的作用力,可以决定图像的松紧
+
+        force.start();  //开始作用
+
+        console.log(nodes);
+        console.log(edges);
+
+        //节点被转化的值的介绍   index：节点的索引号,  px和py：节点上一个时刻的坐标，x和y：节点的当前坐标，weight：节点的权重
+        // 连线被转化的值，其中包含着上个数组
+        
+        //添加连线      
+        var svg_edges = svg.selectAll("line")
+                            .data(edges)
+                            .enter()
+                            .append("line")
+                            .style("stroke","#ccc")
+                            .style("stroke-width",1);
+        
+        var color = d3.scale.category20();
+                
+        //添加节点          
+        var svg_nodes = svg.selectAll("circle")
+                            .data(nodes)
+                            .enter()
+                            .append("circle")
+                            .attr("r",20)
+                            .style("fill",function(d,i){
+                                return color(i);
+                            })
+                            .call(force.drag);  //使得节点能够拖动
+
+        //添加描述节点的文字
+        var svg_texts = svg.selectAll("text")
+                            .data(nodes)
+                            .enter()
+                            .append("text")
+                            .style("fill", "black")
+                            .attr("dx", 20)
+                            .attr("dy", 8)
+                            .text(function(d){
+                                return d.name;
+                            });                   
+        force.on("tick", function(){    //对于每一个时间间隔
+        // console.log(3);
+             //更新连线坐标
+             svg_edges.attr("x1",function(d){ return d.source.x; })
+                    .attr("y1",function(d){ return d.source.y; })
+                    .attr("x2",function(d){ return d.target.x; })
+                    .attr("y2",function(d){ return d.target.y; });
+             
+             //更新节点坐标
+             svg_nodes.attr("cx",function(d){ return d.x; })
+                    .attr("cy",function(d){ return d.y; });
+
+             //更新文字坐标
+             svg_texts.attr("x", function(d){ return d.x; })
+                .attr("y", function(d){ return d.y; });
+        });
+    </script>
+</body>
+</html>
+
+

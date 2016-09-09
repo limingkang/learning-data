@@ -1,0 +1,41 @@
+<!DOCTYPE html> 
+<html> 
+<head>
+  <link rel="stylesheet" type="text/css" href="mystyle.css"> 
+  <script src="jquery.min.js"></script> 
+  <script src="template.js"></script> 
+  <script src="splitpage.js"></script> 
+</head> 
+<body> 
+ 时间范围：
+ <input  name = "start" id="start" > 
+至
+ <input  name = "end" id="end" > 
+<button id= "submit">提交</button>
+<table id="table">
+    <tr>
+        <th><div>流水号</div></th>
+        <th><div>所属车场</div></th>
+        <th><div>车牌号</div></th>
+        <th><div>出场时间</div></th>
+        <th><div>详情</div></th>
+
+    </tr>
+</table>
+
+
+<script id="demo" type="text/x-jquery-tmpl">
+    <tr><td>${dbr_downid}</td><td>${dp_id}</td><td>${dbr_plateid}</td><td>${dbr_outtime}</td><td>详情</td></tr>
+</script>
+<script type="text/javascript">
+    var table = new tkxtable();
+    table.init("table");
+    table.getData("?r=bill-rec/query","demo",{"starttime":$("#start").val(),"endtime":$("#end").val()});
+
+    $("#submit").click(function(){
+      table.refreshData({"page":1,"starttime":$("#start").val(),"endtime":$("#end").val()});
+    })
+</script>
+ 
+</body> 
+</html>
