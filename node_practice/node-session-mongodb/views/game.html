@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+	<title>fly bird</title>
+	<link rel="stylesheet" href="/stylesheets/bird.css" />
+	<link rel="stylesheet" href="/stylesheets/animation.css" />
+	<script src="/javascripts/jquery-2.1.1.min.js" type="text/javascript"></script>
+</head>
+<body>
+    <div style="text-align:center;font-size:20px;colog:red;line-height:40px;">历史最高分数：<span id="highest_score"><%= userscore %></span>分</div>
+	<div class="container">
+		<div class="startPage">
+			<div class="head">
+				<img src="/images/head.jpg" alt="" />
+				<span class="bird1"></span>
+			</div>
+			<div class="game_way">点击或者空格键即可跳跃</div>
+			<div class="btnwrap">
+				<button class="startBtn"></button>
+			</div>
+		</div>
+		<div class="slidewrap"></div>
+		<div class="gamewrap">
+			<span class="flybird downBird"></span>
+			<ul class="colwrap">
+				
+			</ul>
+			<div class="scorewrap">
+				<img src="/images/0.jpg" alt="">
+				<img src="/images/0.jpg" alt="">
+			</div>
+		</div>
+		
+		<div class="over">
+			<span></span>
+			<a class="ok" href=""></a>
+			<button class="submitBtn"></button>
+		</div>	
+		
+	</div>
+</body>
+<script src="/javascripts/bird.js"></script>
+</html>
